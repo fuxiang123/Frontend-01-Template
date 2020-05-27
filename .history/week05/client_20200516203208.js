@@ -56,8 +56,6 @@ class Request {
         if (parser.isFinished) {
           console.log(parser.response);
         }
-        // console.log(parser);
-
         connection.end();
       });
 
@@ -93,7 +91,6 @@ class ResponseParse {
     this.body = null;
     this.bodyParser = null;
   }
-
   receive(string) {
     for (let i = 0; i < string.length; i++) {
       this.receiveChar(string.charAt(i));
@@ -167,55 +164,55 @@ class ResponseParse {
   }
 }
 // 解析body
-/**
- * body格式：
- * 20 --表示body长度
- *  bodyText --body正文
- * 0
- */
 class ChunkedBodyParser {
   constructor() {
+    this.READING_LENGTH_FIRSR_CHAR = 0;
     this.READING_LENGTH = 1;
     this.READING_LENGTH_END = 2;
-    this.READING_TRUNK = 3;
-    this.WAITING_NEW_LINE = 4;
-    this.WAITING_NEW_LINE_END = 5;
-    // this.READING_TRUNK_END = 6;
-    // this.BODY_BLOCK_END = 5;
+    this.READING_CHUNK = 3;
+    this.WAITING_NEW_LINE = 5;
+    this.WAITING_NEW_LINE_END = 6;
+
+    this.BODY_BLOCK_END = 7;
 
     this.current = this.READING_LENGTH;
     this.content = [];
-    this.isFinished = false;
+    this.isFinish = false;
     this.length = 0;
   }
   receiveChar(char) {
     if (this.current === this.READING_LENGTH) {
-      if (char === "\r") {
+      if (char === "/r") {
         //如果是/r说明下一个要接受/n准备换行
         //如果换行了还没有接收到表示body长度的字符，说明没有body
         if (this.length === 0) {
-          this.isFinished = true;
+          this.isFinish = true;
         }
         this.current = this.READING_LENGTH_END;
       } else {
         //如果不是表示现在接收的是表示body长度的字符
-        this.length *= 16;
-        this.length += parseInt(char, 16); // 计算出body长度
+        this.length *= 10;
+        this.length += char.charCodeAt(0) - "0".charCodeAt(0); // 计算出body长度
       }
-    } else if (this.current === this.READING_LENGTH_END) {
+    }
+
+    if (this.current === this.READING_LENGTH_END) {
       if (char === "\n") {
-        this.current = this.READING_TRUNK;
+        this.current = this.READING_CHUNK;
       }
-    } else if (this.current === this.READING_TRUNK) {
+    }
+
+    if (this.current === this.READING_CHUNK) {
       this.content.push(char);
       this.length--;
       if (this.length === 0) {
-        this.current = this.READING_TRUNK_END;
-        this.isFinished = true;
+        this.current = this.WAITING_NEW_LINE;
       }
-    } else if (this.current === this.READING_TRUNK_END) {
-      if (char === "\n") {
-        this.current = this.WAITING_LENGTH;
+    }
+
+    if (this.current === this.WAITING_NEW_LINE) {
+      if (char === "r") {
+        this.current = this.READING_CHUNK;
       }
     }
   }

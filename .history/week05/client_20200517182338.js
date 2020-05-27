@@ -200,7 +200,7 @@ class ChunkedBodyParser {
       } else {
         //如果不是表示现在接收的是表示body长度的字符
         this.length *= 16;
-        this.length += parseInt(char, 16); // 计算出body长度
+        this.length += char.charCodeAt(0) - "0".charCodeAt(0); // 计算出body长度
       }
     } else if (this.current === this.READING_LENGTH_END) {
       if (char === "\n") {

@@ -1,4 +1,5 @@
 const net = require("net");
+const parser = require("./parser");
 
 class Request {
   // method, url = host + port + path;
@@ -54,7 +55,7 @@ class Request {
       connection.on("data", (data) => {
         parser.receive(data.toString());
         if (parser.isFinished) {
-          console.log(parser.response);
+          resolve(parser.response);
         }
         // console.log(parser);
 
@@ -235,7 +236,7 @@ void (async function () {
     },
   });
   const response = await req.send();
-  // console.log(response);
+  parser.parseHTML(response);
 })();
 
 // const client = net.createConnection(

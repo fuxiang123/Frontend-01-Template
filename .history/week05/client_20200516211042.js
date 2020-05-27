@@ -167,12 +167,6 @@ class ResponseParse {
   }
 }
 // 解析body
-/**
- * body格式：
- * 20 --表示body长度
- *  bodyText --body正文
- * 0
- */
 class ChunkedBodyParser {
   constructor() {
     this.READING_LENGTH = 1;
@@ -190,6 +184,8 @@ class ChunkedBodyParser {
   }
   receiveChar(char) {
     if (this.current === this.READING_LENGTH) {
+      console.log("READING_LENGTH");
+
       if (char === "\r") {
         //如果是/r说明下一个要接受/n准备换行
         //如果换行了还没有接收到表示body长度的字符，说明没有body
@@ -199,14 +195,18 @@ class ChunkedBodyParser {
         this.current = this.READING_LENGTH_END;
       } else {
         //如果不是表示现在接收的是表示body长度的字符
-        this.length *= 16;
-        this.length += parseInt(char, 16); // 计算出body长度
+        this.length *= 10;
+        this.length += char.charCodeAt(0) - "0".charCodeAt(0); // 计算出body长度
       }
     } else if (this.current === this.READING_LENGTH_END) {
+      console.log("READING_LENGTH_END");
+
       if (char === "\n") {
         this.current = this.READING_TRUNK;
       }
     } else if (this.current === this.READING_TRUNK) {
+      console.log("READING_TRUNK");
+
       this.content.push(char);
       this.length--;
       if (this.length === 0) {
@@ -214,6 +214,8 @@ class ChunkedBodyParser {
         this.isFinished = true;
       }
     } else if (this.current === this.READING_TRUNK_END) {
+      console.log("READING_TRUNK_END");
+
       if (char === "\n") {
         this.current = this.WAITING_LENGTH;
       }

@@ -1,4 +1,5 @@
 const net = require("net");
+const parser = require("./parser");
 
 class Request {
   // method, url = host + port + path;
@@ -54,9 +55,8 @@ class Request {
       connection.on("data", (data) => {
         parser.receive(data.toString());
         if (parser.isFinished) {
-          console.log(parser.response);
+          resolve(parser.response);
         }
-        // console.log(parser);
 
         connection.end();
       });
@@ -235,35 +235,5 @@ void (async function () {
     },
   });
   const response = await req.send();
-  // console.log(response);
+  let dom = parser.parseHTML(response.body);
 })();
-
-// const client = net.createConnection(
-//   {
-//     host: "127.0.0.1",
-//     port: 8088,
-//   },
-//   () => {
-//     console.log("connecte to server");
-
-//     const req = new Request({
-//       method: "GET",
-//       host: "127.0.0.1",
-//       port: "8088",
-//       path: "/",
-//       body: {
-//         name: "fuxiang",
-//       },
-//     });
-//     client.write(req.toString());
-//   }
-// );
-
-// client.on("data", (data) => {
-//   console.log(data.toString());
-//   client.end();
-// });
-
-// client.on("end", (data) => {
-//   console.log("disconnected from server");
-// });

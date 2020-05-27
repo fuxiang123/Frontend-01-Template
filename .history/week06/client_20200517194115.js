@@ -235,7 +235,7 @@ void (async function () {
     },
   });
   const response = await req.send();
-  // console.log(response);
+  console.log(response);
 })();
 
 // const client = net.createConnection(

@@ -15,22 +15,19 @@ function getStyl(element) {
       element.style[prop] = parseInt(element.style[prop]);
     }
   }
-
-  return element.style;
 }
 
 function layout(element) {
   if (element.computedStyle) {
     return;
   }
-  // 给元素创style属性，在里面放入css属性,然后返回该style对象
-  // 同时把元素的长度单位如px/rem等，转化为具体的数值
+
   var elementStyle = getStyle(element);
   // 这里暂时不处理flex以外的样式
   if (elementStyle.display !== "flex") {
     return;
   }
-  // 取出该元素所有children,并过滤文本节点
+  // 过滤文本节点
   var items = element.children.filter((e) => e.type === "element");
   items.sort((a, b) => (a.order || 0) - (b.order || 0));
 
@@ -43,7 +40,7 @@ function layout(element) {
   });
 
   // 给一些flex属性设置默认值
-  if (!style.flexDirection || style.flexDirection == "auto")
+  if (!style.flexDirection || styLe.flexDirection == "auto")
     style.flexDirection = "row";
   if (!style.alignItems || style.alignItems === "auto")
     style.alignItems = "stretch";
@@ -55,7 +52,7 @@ function layout(element) {
 
   // main 主轴
   // cross 副轴
-  // Size 尺寸. 当flexDirection为row的时候，mainSize就是元素的宽度
+  // Size 尺寸
   // Start 开始方向
   // End 结束方向
   // Sign 布局在容器中的排布方向（从左往右，就是把在base的基础上加数值；从右往左，就是在base的基础上减数值）
@@ -119,51 +116,9 @@ function layout(element) {
   }
 
   if (style.flexWrap === "wrap-reverse") {
-    // 换行被反转，就把副轴的起点和终点换一下
     var tmp = crossStart;
     crossStart = crossEnd;
     crossEnd = tmp;
     crossSign = -1;
-  } else {
-    crossBase = 0;
-    crossSign = +1;
-  }
-
-  var isAutoMainSize = false;
-  // 把所有子元素的主轴长度加起来，得到该元素的尺寸
-  if (!style[mainSize]) {
-    elementStyle[mainSize] = 0;
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (itemStyle[mainSize] !== null || itemStyle[mainSize] !== void 0) {
-        elementStyle[mainSize] = elementStyle[mainSize] + itemStyle[mainSize];
-      }
-    }
-    isAutoMainSize = true;
-  }
-
-  // 创建行
-  var flexLine = [];
-  // 换行后可能有多行，把所有行都放进一个统一的数组
-  var flexLines = [flexLine];
-  // 主轴的剩余空间
-  var mainSpace = elementStyle[mainSize];
-  // 交叉轴的剩余空间
-  var crossSpace = 0;
-
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    var itemStyle = getStyle(item);
-
-    if (itemStyle[mainSize] === null) {
-      itemStyle[mainSize] = 0;
-    }
-
-    if (itemStyle.flex) {
-      flexLine.push(item);
-    } else {
-    }
   }
 }
-
-module.exports = layout;

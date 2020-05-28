@@ -158,11 +158,6 @@ function layout(element) {
     if (itemStyle[mainSize] === null) {
       itemStyle[mainSize] = 0;
     }
-
-    if (itemStyle.flex) {
-      flexLine.push(item);
-    } else {
-    }
   }
 }
 

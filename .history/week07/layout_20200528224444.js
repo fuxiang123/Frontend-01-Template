@@ -161,7 +161,6 @@ function layout(element) {
 
     if (itemStyle.flex) {
       flexLine.push(item);
-    } else {
     }
   }
 }

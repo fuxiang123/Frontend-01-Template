@@ -55,7 +55,7 @@ function layout(element) {
 
   // main 主轴
   // cross 副轴
-  // Size 尺寸. 当flexDirection为row的时候，mainSize就是元素的宽度
+  // Size 尺寸
   // Start 开始方向
   // End 结束方向
   // Sign 布局在容器中的排布方向（从左往右，就是把在base的基础上加数值；从右往左，就是在base的基础上减数值）
@@ -154,15 +154,6 @@ function layout(element) {
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     var itemStyle = getStyle(item);
-
-    if (itemStyle[mainSize] === null) {
-      itemStyle[mainSize] = 0;
-    }
-
-    if (itemStyle.flex) {
-      flexLine.push(item);
-    } else {
-    }
   }
 }
 

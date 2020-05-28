@@ -15,15 +15,13 @@ function getStyl(element) {
       element.style[prop] = parseInt(element.style[prop]);
     }
   }
-
-  return element.style;
 }
 
 function layout(element) {
   if (element.computedStyle) {
     return;
   }
-  // 给元素创style属性，在里面放入css属性,然后返回该style对象
+  // 给元素创style属性，在里面放入css属性
   // 同时把元素的长度单位如px/rem等，转化为具体的数值
   var elementStyle = getStyle(element);
   // 这里暂时不处理flex以外的样式
@@ -43,7 +41,7 @@ function layout(element) {
   });
 
   // 给一些flex属性设置默认值
-  if (!style.flexDirection || style.flexDirection == "auto")
+  if (!style.flexDirection || styLe.flexDirection == "auto")
     style.flexDirection = "row";
   if (!style.alignItems || style.alignItems === "auto")
     style.alignItems = "stretch";
@@ -55,7 +53,7 @@ function layout(element) {
 
   // main 主轴
   // cross 副轴
-  // Size 尺寸. 当flexDirection为row的时候，mainSize就是元素的宽度
+  // Size 尺寸
   // Start 开始方向
   // End 结束方向
   // Sign 布局在容器中的排布方向（从左往右，就是把在base的基础上加数值；从右往左，就是在base的基础上减数值）
@@ -153,16 +151,6 @@ function layout(element) {
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-    var itemStyle = getStyle(item);
-
-    if (itemStyle[mainSize] === null) {
-      itemStyle[mainSize] = 0;
-    }
-
-    if (itemStyle.flex) {
-      flexLine.push(item);
-    } else {
-    }
   }
 }
 

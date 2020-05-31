@@ -8,6 +8,8 @@ function render(viewPort, element) {
       let color = element.style["background-color"] || "rgb(0,0,0)";
       color.match(/rgb\((\d+),(\d+),(\d+)\)/);
       img.fill(Number(RegExp.$1), Number(RegExp.$2), Number(RegExp.$3), 1);
+      console.log("element.style", element.style);
+
       viewPort.draw(img, element.style.left || 0, element.style.top || 0);
     }
   }

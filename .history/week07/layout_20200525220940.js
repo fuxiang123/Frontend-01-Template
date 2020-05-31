@@ -1,5 +1,0 @@
-function (){
-  var mainSize,mainStart;
-
-  
-}

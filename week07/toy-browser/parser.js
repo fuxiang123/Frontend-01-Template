@@ -1,5 +1,5 @@
 const { addCssRules, computeCss } = require("./addCssRules");
-const { layout } = require("./layout");
+const layout = require("./layout");
 
 const EOF = Symbol("EOF"); // EOF - end of file
 let currentToken = {};
@@ -9,7 +9,6 @@ let currentTextNode = {};
 let stack = [{ type: "document", children: [] }];
 
 function emit(token) {
-  // console.log(token);
   let top = stack[stack.length - 1];
 
   if (token.type === "startTag") {
@@ -29,11 +28,11 @@ function emit(token) {
       }
     }
 
-    top.children.push(element);
     // 设置parent属性，方便在计算css时查找到对应元素
     element.parent = top;
     // 对元素对应的css进行计算
     computeCss(element);
+    top.children.push(element);
 
     if (!token.isSelfClosing) {
       // 因为被关闭的标签会自动出栈，所以新加入的未关闭标签必然会是栈顶元素的子元素
@@ -251,7 +250,7 @@ function selfClosingStartTag(c) {
 }
 
 function unexpectedCharacterError(c, stateName) {
-  throw "unexpected character:" + c + "in" + stateName;
+  throw "unexpected character:" + c + " in " + stateName;
 }
 
 module.exports.parseHTML = function parseHTML(html) {

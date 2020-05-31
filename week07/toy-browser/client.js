@@ -1,5 +1,7 @@
 const net = require("net");
 const parser = require("./parser");
+const render = require("./render");
+const images = require("images");
 
 class Request {
   // method, url = host + port + path;
@@ -234,7 +236,13 @@ void (async function () {
       name: "fuxiang",
     },
   });
-  const response = await req.send();
-  let dom = parser.parseHTML(response.body);
-  console.log(dom);
+  try {
+    const response = await req.send();
+    let dom = parser.parseHTML(response.body);
+    let viewPort = images(800, 600);
+    render(viewPort, dom);
+    viewPort.save("viewPort.jpg");
+  } catch (e) {
+    console.log("error", e);
+  }
 })();
